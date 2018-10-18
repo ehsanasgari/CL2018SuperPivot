@@ -1,3 +1,11 @@
+__author__ = "Ehsaneddin Asgari"
+__license__ = "Apache 2"
+__version__ = "1.0.0"
+__maintainer__ = "Ehsaneddin Asgari"
+__email__ = "asgari@berkeley.edu"
+__website__ = "https://llp.berkeley.edu/asgari/"
+
+
 import subprocess
 import time
 import codecs
@@ -10,7 +18,7 @@ class FastAlignUtility:
     '''
     This class is python wrapper for running fast align
     '''
-    fastalign_path = '/mounts/data/proj/asgari/github_repos/superpivot/alignment/aligner/fast_align-master/build/'
+    fastalign_path = 'alignment/aligner/fast_align-master/build/'
 
     def __init__(self):
         '''
@@ -23,63 +31,11 @@ class FastAlignUtility:
         my_path1=outputdir + name + "_fwd.align"
         my_path2=outputdir + name + "_rev.align"
         if not os.path.exists(my_path1) or os.path.getsize(my_path1) == 0:
-            cmd1 = FastAlignUtility.fastalign_path + 'fast_align -I 50 -i ' + file + ' -d -o -v > ' + outputdir + name + "_fwd.align"
+            cmd1 = FastAlignUtility.fastalign_path + 'fast_align -I 10 -i ' + file + ' -d -o -v > ' + outputdir + name + "_fwd.align"
             subprocess.getoutput(cmd1)
         if not os.path.exists(my_path2) or os.path.getsize(my_path2) == 0:
-            cmd2 = FastAlignUtility.fastalign_path + 'fast_align -I 50 -i ' + file + ' -d -o -v -r > ' + outputdir + name + "_rev.align"
+            cmd2 = FastAlignUtility.fastalign_path + 'fast_align -I 10 -i ' + file + ' -d -o -v -r > ' + outputdir + name + "_rev.align"
             subprocess.getoutput(cmd2)
-
-    @staticmethod
-    def generate_intersect_alignments(name, path_dir):
-        try:
-            alignment_list = [[(int(pair.split('-')[0]), int(pair.split('-')[1])) for pair in l.split()] for l in
-                              codecs.open(path_dir + name + "_fwd.align", 'r', 'utf-8').readlines()]
-            alignment_list = [[(int(pair.split('-')[0]), int(pair.split('-')[1])) for pair in l.split() if
-                               (int(pair.split('-')[0]), int(pair.split('-')[1])) in alignment_list[k]] for k, l in
-                              enumerate(codecs.open(path_dir + name + "_rev.align", 'r', 'utf-8').readlines())]
-
-            f = codecs.open(path_dir + name + '_intersect.align', 'w+', 'utf-8')
-            for line in alignment_list:
-                f.write(' '.join([str(pair[0]) + '-' + str(pair[1]) for pair in line] + ['\n']))
-            f.close()
-        except:
-            f = codecs.open(path_dir + 'log_error_intersect' + name, 'w+', 'utf-8')
-            f.close()
-
-    @staticmethod
-    def run_alignment(l1, l2):
-        start_time = time.time()
-        name = l1 + '_' + l2
-        rev_name = l2 + '_' + l1
-
-        cmd1 = FastAlignUtility.fastalign_path + 'fast_align -I 50 -i ' + FastAlignUtility.fastalign_path + 'lang_files/' + name + '.txt -d -o -v > ' + FastAlignUtility.fastalign_path + 'output/' + name + ".align"
-        cmd2 = FastAlignUtility.fastalign_path + 'fast_align -I 50 -i ' + FastAlignUtility.fastalign_path + 'lang_files/' + name + '.txt -d -o -v -r > ' + FastAlignUtility.fastalign_path + 'output/' + rev_name + ".align"
-        cmd3 = FastAlignUtility.fastalign_path + 'atools -I 50 -i ' + FastAlignUtility.fastalign_path + 'output/' + name + '.align -j ' + FastAlignUtility.fastalign_path + 'output/' + rev_name + ".align -c grow-diag-final-and >" + FastAlignUtility.fastalign_path + '/output/' + name + "_sym.align"
-
-        out1 = subprocess.getoutput(cmd1)
-        out2 = subprocess.getoutput(cmd2)
-        out3 = subprocess.getoutput(cmd3)
-
-        print(name + " is done ")
-        print("--- %s seconds : symmetric_alignment " % (time.time() - start_time))
-        return out1, out2, out3
-
-    @staticmethod
-    def run_alignments(language_pairs):
-        '''
-        Execute the fast alignment and returns its outputs
-        :return:
-        '''
-        out1 = dict()
-        out2 = dict()
-        out3 = dict()
-        for l1, l2 in language_pairs:
-            out1, out2, out3 = FastAlignUtility.run_alignemnt(l1, l2)
-            out1[l1 + '_' + l2] = out1
-            out2[l1 + '_' + l2] = out2
-            out3[l1 + '_' + l2] = out3
-
-        return out1, out2, out3
 
     @staticmethod
     def generate_fast_align_files(l1, l1_trans, l2, l2_trans, pair_sentences, lang_file_path):

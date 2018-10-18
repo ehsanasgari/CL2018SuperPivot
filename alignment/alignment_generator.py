@@ -1,3 +1,10 @@
+__author__ = "Ehsaneddin Asgari"
+__license__ = "Apache 2"
+__version__ = "1.0.0"
+__maintainer__ = "Ehsaneddin Asgari"
+__email__ = "asgari@berkeley.edu"
+__website__ = "https://llp.berkeley.edu/asgari/"
+
 import sys
 
 sys.path.append("../")
