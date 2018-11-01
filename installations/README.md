@@ -1,4 +1,4 @@
-## (0) Loging to the calculus server
+## (Step 0) Loging to the calculus server
 
 Login to the sever and follow the steps!
 ```
@@ -6,7 +6,7 @@ ssh user@calculus.cis.lmu.de
 ```
 
 
-## (1) Miniconda installation
+## (Step 1) Miniconda installation
 
 The first step is to install the latest version of conda on your home directory.
 
@@ -32,7 +32,7 @@ conda config --add channels conda-forge
 ```
 
 
-## (2) Installation of dependencies in the virtual environment
+## (Step 2) Installation of dependencies in the virtual environment
 
 The next step would be installation of the dependencies:
 
@@ -48,7 +48,7 @@ source activate CL2018
 ```
 
 
-## (3) Running Jupyter Notebook on the server and view it on your laptop
+## (Step 3) Running Jupyter Notebook on the server and view it on your laptop
 
 
 ### Run a Jupyter notebook on the server
